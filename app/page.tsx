@@ -198,6 +198,31 @@ function nextMoveFor(area: FutureArea) {
   return moves[area];
 }
 
+function rescueReflection(type: string, text: string) {
+  const situation = text.trim();
+  const opener = situation
+    ? `This is the part that feels loud right now: ${situation}`
+    : "Name the part that feels loud right now, even roughly.";
+
+  if (type === "His situation") {
+    return `${opener} His uncertainty can matter deeply to you without becoming the whole weather of your life.`;
+  }
+  if (type === "Overwhelmed") {
+    return `${opener} You do not need to solve the whole thing at once. Choose the next small handle.`;
+  }
+  if (type === "Confidence") {
+    return `${opener} Confidence can come after evidence. You only need one true piece to stand on first.`;
+  }
+  if (type === "Work") {
+    return `${opener} Work is one arena. It is not the full measure of your intelligence or your future.`;
+  }
+  if (type === "Lonely") {
+    return `${opener} Loneliness is a real signal, not a verdict. One thread of contact can still be enough for today.`;
+  }
+
+  return `${opener} It is real, and it is not the whole map. Come back to one thing that still belongs to you.`;
+}
+
 export default function Home() {
   const [tab, setTab] = useState<Tab>("today");
   const [moments, setMoments] = useState<Moment[]>(seedMoments);
@@ -207,6 +232,7 @@ export default function Home() {
   const [futureSignal, setFutureSignal] = useState(true);
   const [rescueType, setRescueType] = useState("His situation");
   const [rescueMode, setRescueMode] = useState("Comfort me");
+  const [rescueText, setRescueText] = useState("");
   const [savedNotice, setSavedNotice] = useState("");
 
   useEffect(() => {
@@ -271,18 +297,21 @@ export default function Home() {
       </div>
       <section className="phone-frame" aria-label="Little Light app">
         <header className="topbar">
-          <div className="brand-lockup">
-            <div className="brand-logo" aria-hidden="true">
-              <span className="brand-sun" />
-              <span className="brand-horizon" />
-              <span className="brand-path" />
+            <div className="brand-lockup">
+              <div className="brand-logo" aria-hidden="true">
+                <span className="brand-sun" />
+                <span className="brand-horizon" />
+                <span className="brand-path" />
+              </div>
+              <div>
+                <p className="brand-name">Little Light</p>
+                <h1>Evidence for the life beyond this moment.</h1>
+                <p className="brand-subtitle">
+                  Past evidence. Present perspective. Future direction.
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="eyebrow">Little Light</p>
-              <h1>Don't let one difficult part become the whole life.</h1>
-            </div>
-          </div>
-        </header>
+          </header>
 
         <nav className="tabs" aria-label="Main navigation">
           {(["today", "rescue", "sunshine", "future"] as Tab[]).map((item) => (
@@ -399,7 +428,22 @@ export default function Home() {
                   </button>
                 ))}
               </div>
+              <label className="rescue-input">
+                <span>What is happening?</span>
+                <textarea
+                  aria-label="What is happening today?"
+                  onChange={(event) => setRescueText(event.target.value)}
+                  placeholder="Write the messy version. One sentence is enough."
+                  value={rescueText}
+                />
+              </label>
             </div>
+
+            <article className="rescue-reflection">
+              <p className="section-kicker">First, name the shape</p>
+              <h3>{rescueType}</h3>
+              <p>{rescueReflection(rescueType, rescueText)}</p>
+            </article>
 
             {rescueType === "His situation" ? (
               <div className="rescue-stack">

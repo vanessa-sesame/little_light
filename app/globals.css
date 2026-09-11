@@ -144,7 +144,7 @@ summary {
   gap: 14px;
 }
 
-.eyebrow,
+.brand-name,
 .section-kicker {
   margin: 0 0 8px;
   color: #aa6a16;
@@ -154,13 +154,26 @@ summary {
   text-transform: uppercase;
 }
 
+.brand-name {
+  font-size: 0.82rem;
+  color: #684319;
+}
+
 .topbar h1 {
   max-width: 620px;
   margin: 0;
-  font-size: clamp(1.55rem, 8vw, 3.1rem);
+  font-size: clamp(1.32rem, 6vw, 2.35rem);
   font-weight: 780;
-  line-height: 0.98;
+  line-height: 1.03;
   letter-spacing: 0;
+}
+
+.brand-subtitle {
+  max-width: 520px;
+  margin: 10px 0 0;
+  color: rgba(31, 33, 31, 0.62);
+  font-size: 0.92rem;
+  line-height: 1.35;
 }
 
 .brand-logo {
@@ -274,6 +287,7 @@ summary {
 .future-hero,
 .future-me,
 .sunshine-note,
+.rescue-reflection,
 .latest-signal,
 .perspective-card,
 .summary-card,
@@ -294,7 +308,8 @@ summary {
 .monthly,
 .future-hero,
 .future-me,
-.sunshine-note {
+.sunshine-note,
+.rescue-reflection {
   padding: 22px;
 }
 
@@ -331,6 +346,22 @@ textarea:focus {
   box-shadow:
     inset 0 0 0 1px rgba(240, 111, 92, 0.5),
     0 0 0 5px rgba(240, 111, 92, 0.12);
+}
+
+.rescue-input {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.rescue-input span {
+  color: var(--foreground);
+  font-size: 0.9rem;
+  font-weight: 760;
+}
+
+.rescue-input textarea {
+  min-height: 94px;
 }
 
 .chip-grid {
@@ -473,6 +504,7 @@ textarea:focus {
 
 .latest-signal p,
 .truth-card p,
+.rescue-reflection p,
 .come-back p,
 .future-hero p,
 .monthly p,
@@ -505,6 +537,7 @@ textarea:focus {
 .perspective-card h3,
 .summary-card h3,
 .truth-card h3,
+.rescue-reflection h3,
 .vision-block h3,
 .monthly h3,
 .future-me h3,
@@ -530,6 +563,12 @@ li {
 .truth-card {
   background:
     linear-gradient(145deg, rgba(240, 111, 92, 0.13), rgba(255, 255, 252, 0.72)),
+    var(--paper);
+}
+
+.rescue-reflection {
+  background:
+    linear-gradient(145deg, rgba(87, 200, 186, 0.2), rgba(255, 226, 143, 0.18), rgba(255, 255, 252, 0.72)),
     var(--paper);
 }
 
