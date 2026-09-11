@@ -182,6 +182,22 @@ function personLabel(person: Person) {
   return "Us";
 }
 
+function areaCount(moments: Moment[], area: FutureArea) {
+  return moments.filter((moment) => moment.futureArea === area).length;
+}
+
+function nextMoveFor(area: FutureArea) {
+  const moves: Record<FutureArea, string> = {
+    location: "Collect one concrete signal about where you might want to live: a city, company cluster, school option, visa path, or lifestyle detail.",
+    career: "Build or learn one small technical thing this week, then save it as evidence.",
+    identity: "Choose one action that makes you feel capable before you try to feel confident.",
+    family: "Name one version of ambition that still includes the children and the people you love.",
+    lifestyle: "Put one small piece of the future into this week: a walk, a book, a coffee, a plan, or a friend.",
+  };
+
+  return moves[area];
+}
+
 export default function Home() {
   const [tab, setTab] = useState<Tab>("today");
   const [moments, setMoments] = useState<Moment[]>(seedMoments);
@@ -216,6 +232,11 @@ export default function Home() {
 
   const myEvidence = moments.find((moment) => moment.person === "me") ?? moments[0];
   const futureSignals = moments.filter((moment) => moment.futureSignal);
+  const latestMoment = moments[0];
+  const strongestFutureArea =
+    (["career", "lifestyle", "identity", "location", "family"] as FutureArea[])
+      .sort((first, second) => areaCount(futureSignals, second) - areaCount(futureSignals, first))[0] ??
+    "career";
 
   function saveMoment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -348,7 +369,16 @@ export default function Home() {
               </div>
             </div>
 
-            <MomentList moments={moments} />
+            {latestMoment && (
+              <section className="latest-signal" aria-label="Latest saved moment">
+                <div>
+                  <p className="section-kicker">Latest saved</p>
+                  <h3>{latestMoment.text}</h3>
+                  <p>{interpretMoment(latestMoment)}</p>
+                </div>
+                <span>{personLabel(latestMoment.person)}</span>
+              </section>
+            )}
           </section>
         )}
 
@@ -480,19 +510,32 @@ export default function Home() {
           <section className="screen">
             <div className="future-hero">
               <p className="section-kicker">Future Light</p>
-              <h2>You are accumulating pieces of it.</h2>
+              <h2>
+                {futureSignals.length
+                  ? `You have ${futureSignals.length} pieces of future evidence.`
+                  : "Start collecting evidence for the future."}
+              </h2>
               <p>
-                The future is not only a fantasy. Some of its materials are already
-                showing up in the present.
+                The future should not feel like a poster on the wall. It should
+                feel like something you can see forming from today's signals.
               </p>
             </div>
 
-            <div className="vision-list">
-              <VisionBlock title="Where I live" items={futureVision.location} />
-              <VisionBlock title="What I do" items={futureVision.career} />
-              <VisionBlock title="How I feel" items={futureVision.feelings} />
-              <VisionBlock title="Who is around me" items={futureVision.people} />
-              <VisionBlock title="Daily life" items={futureVision.lifestyle} />
+            <div className="future-map">
+              {(["career", "lifestyle", "identity", "location", "family"] as FutureArea[]).map(
+                (area) => (
+                  <article
+                    className={area === strongestFutureArea ? "future-area active" : "future-area"}
+                    key={area}
+                  >
+                    <span>{areaCount(futureSignals, area)}</span>
+                    <div>
+                      <h3>{futureAreaLabels[area]}</h3>
+                      <p>{futureAreaCopy(area)}</p>
+                    </div>
+                  </article>
+                ),
+              )}
             </div>
 
             <article className="future-me">
@@ -508,40 +551,43 @@ export default function Home() {
                 </p>
                 <p>
                   <strong>Recent movement:</strong>
-                  {futureSignals.length
-                    ? futureSignals
-                        .slice(0, 3)
-                        .map((moment) => ` ${moment.text.split(" ").slice(0, 4).join(" ")} -> ${futureAreaLabels[moment.futureArea ?? "career"]}`)
-                    : " Add future signals in Today."}
+                  {futureSignals.length ? (
+                    <span className="movement-list">
+                      {futureSignals.slice(0, 3).map((moment) => (
+                        <span key={moment.id}>
+                          {moment.text.split(" ").slice(0, 6).join(" ")} connects to{" "}
+                          {futureAreaLabels[moment.futureArea ?? "career"]}
+                        </span>
+                      ))}
+                    </span>
+                  ) : (
+                    " Add future signals in Today."
+                  )}
                 </p>
               </div>
               <p className="notice">You are not there yet. But you are not standing still either.</p>
             </article>
+
+            <article className="next-move">
+              <p className="section-kicker">Next small move</p>
+              <h3>{futureAreaLabels[strongestFutureArea]}</h3>
+              <p>{nextMoveFor(strongestFutureArea)}</p>
+            </article>
+
+            <details className="vision-details">
+              <summary>View the bigger vision</summary>
+              <div className="vision-list">
+                <VisionBlock title="Where I live" items={futureVision.location} />
+                <VisionBlock title="What I do" items={futureVision.career} />
+                <VisionBlock title="How I feel" items={futureVision.feelings} />
+                <VisionBlock title="Who is around me" items={futureVision.people} />
+                <VisionBlock title="Daily life" items={futureVision.lifestyle} />
+              </div>
+            </details>
           </section>
         )}
       </section>
     </main>
-  );
-}
-
-function MomentList({ moments }: { moments: Moment[] }) {
-  return (
-    <section className="moment-list" aria-label="Recent entries">
-      <div className="summary-heading">
-        <h2>Recent evidence</h2>
-        <span>{moments.length ? "saved locally" : "empty"}</span>
-      </div>
-      {moments.slice(0, 6).map((moment) => (
-        <article className="moment-card" key={moment.id}>
-          <div>
-            <span>{formatDate(moment.createdAt)}</span>
-            <span>{personLabel(moment.person)}</span>
-          </div>
-          <p>{moment.text}</p>
-          <small>{interpretMoment(moment)}</small>
-        </article>
-      ))}
-    </section>
   );
 }
 
@@ -607,6 +653,18 @@ function VisionBlock({ title, items }: { title: string; items: string[] }) {
       </div>
     </article>
   );
+}
+
+function futureAreaCopy(area: FutureArea) {
+  const copy: Record<FutureArea, string> = {
+    location: "Places, ecosystems, and environments that would give your life more room.",
+    career: "Technical skill, AI work, product-building, and stronger professional options.",
+    identity: "Evidence that you are becoming capable, independent, curious, and less trapped.",
+    family: "Signals that ambition and family can belong in the same life.",
+    lifestyle: "Books, nature, friends, coffee, travel, movement, and daily spaciousness.",
+  };
+
+  return copy[area];
 }
 
 function rescueResponse(mode: string) {
