@@ -172,6 +172,16 @@ function summarize(moments: Moment[], person: Person) {
   return owned.slice(0, 4).map((moment) => interpretMoment(moment));
 }
 
+function personLabel(person: Person) {
+  if (person === "me") {
+    return "Me";
+  }
+  if (person === "partner") {
+    return "Him";
+  }
+  return "Us";
+}
+
 export default function Home() {
   const [tab, setTab] = useState<Tab>("today");
   const [moments, setMoments] = useState<Moment[]>(seedMoments);
@@ -235,11 +245,22 @@ export default function Home() {
     <main className="app-shell">
       <section className="phone-frame" aria-label="Little Light app">
         <header className="topbar">
-          <div>
-            <p className="eyebrow">Little Light</p>
-            <h1>Don't let one difficult part become the whole life.</h1>
+          <div className="brand-lockup">
+            <div className="brand-logo" aria-hidden="true">
+              <span className="brand-sun" />
+              <span className="brand-horizon" />
+              <span className="brand-path" />
+            </div>
+            <div>
+              <p className="eyebrow">Little Light</p>
+              <h1>Don't let one difficult part become the whole life.</h1>
+            </div>
           </div>
-          <div className="light-mark" aria-hidden="true" />
+          <div className="signal-orbit" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
         </header>
 
         <nav className="tabs" aria-label="Main navigation">
@@ -427,10 +448,19 @@ export default function Home() {
               <span>{thisMonth.length} this month</span>
             </div>
 
+            <article className="sunshine-note">
+              <h3>How this updates</h3>
+              <p>
+                Sunshine is generated from the moments you save in Today. Pick
+                Me, Him, or Us when saving, and the matching column updates
+                automatically on this device.
+              </p>
+            </article>
+
             <div className="sunshine-grid">
-              <SummaryCard title="My Week" items={summarize(thisWeek, "me")} />
-              <SummaryCard title="His Week" items={summarize(thisWeek, "partner")} />
-              <SummaryCard title="Us" items={summarize(thisWeek, "us")} />
+              <SummaryCard title="My Week" moments={thisWeek} person="me" />
+              <SummaryCard title="His Week" moments={thisWeek} person="partner" />
+              <SummaryCard title="Us" moments={thisWeek} person="us" />
             </div>
 
             <article className="monthly">
@@ -440,6 +470,7 @@ export default function Home() {
                 A difficult individual week can hide slow movement. This month
                 contains {thisMonth.length} saved pieces of evidence, including{" "}
                 {futureSignals.length} signals connected to the larger life you want.
+                Your phone and laptop each keep their own local evidence for now.
               </p>
             </article>
           </section>
@@ -504,7 +535,7 @@ function MomentList({ moments }: { moments: Moment[] }) {
         <article className="moment-card" key={moment.id}>
           <div>
             <span>{formatDate(moment.createdAt)}</span>
-            <span>{moment.person === "me" ? "Me" : moment.person === "partner" ? "Him" : "Us"}</span>
+            <span>{personLabel(moment.person)}</span>
           </div>
           <p>{moment.text}</p>
           <small>{interpretMoment(moment)}</small>
@@ -527,15 +558,40 @@ function PerspectiveColumn({ title, items }: { title: string; items: string[] })
   );
 }
 
-function SummaryCard({ title, items }: { title: string; items: string[] }) {
+function SummaryCard({
+  title,
+  moments,
+  person,
+}: {
+  title: string;
+  moments: Moment[];
+  person: Person;
+}) {
+  const owned = moments.filter((moment) => moment.person === person);
+  const fallback = summarize(moments, person);
+
   return (
     <article className="summary-card">
-      <h3>{title}</h3>
-      <ul>
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
+      <div className="summary-card-head">
+        <h3>{title}</h3>
+        <span>{owned.length}</span>
+      </div>
+      {owned.length ? (
+        <div className="summary-moments">
+          {owned.slice(0, 4).map((moment) => (
+            <div key={moment.id}>
+              <strong>{moment.text}</strong>
+              <small>{interpretMoment(moment)}</small>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <ul>
+          {fallback.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      )}
     </article>
   );
 }

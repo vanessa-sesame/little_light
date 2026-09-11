@@ -71,12 +71,19 @@ button {
 .topbar {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 18px;
   padding: 24px 22px 16px;
   background:
     linear-gradient(145deg, rgba(255, 252, 244, 0.96), rgba(241, 228, 208, 0.82)),
     linear-gradient(90deg, rgba(113, 132, 106, 0.08), rgba(93, 127, 156, 0.08));
   border-bottom: 1px solid var(--line);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
 }
 
 .eyebrow,
@@ -97,14 +104,75 @@ button {
   letter-spacing: 0;
 }
 
-.light-mark {
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+.brand-logo {
+  position: relative;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(217, 133, 37, 0.36);
+  border-radius: 14px;
   background:
-    radial-gradient(circle at 42% 36%, #fff7c9 0 18%, #f1b95f 19% 44%, #c9762a 45% 100%);
-  box-shadow: 0 0 0 8px rgba(217, 133, 37, 0.12);
+    linear-gradient(180deg, #fff9df 0 45%, #eedbc2 46% 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 12px 28px rgba(80, 59, 31, 0.12);
+  overflow: hidden;
+}
+
+.brand-sun {
+  position: absolute;
+  left: 16px;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f2ad3e;
+  box-shadow: 0 0 18px rgba(242, 173, 62, 0.54);
+}
+
+.brand-horizon {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  bottom: 16px;
+  height: 2px;
+  background: #8c765d;
+}
+
+.brand-path {
+  position: absolute;
+  left: 21px;
+  right: 21px;
+  bottom: -3px;
+  height: 20px;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(180deg, rgba(255, 252, 244, 0.94), rgba(217, 133, 37, 0.3));
+  transform: perspective(30px) rotateX(22deg);
+  transform-origin: bottom;
+}
+
+.signal-orbit {
+  display: grid;
+  gap: 5px;
+  padding-top: 5px;
+}
+
+.signal-orbit span {
+  display: block;
+  width: 28px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(113, 132, 106, 0.56);
+}
+
+.signal-orbit span:nth-child(2) {
+  width: 20px;
+  background: rgba(217, 133, 37, 0.62);
+}
+
+.signal-orbit span:nth-child(3) {
+  width: 12px;
+  background: rgba(93, 127, 156, 0.52);
 }
 
 .tabs {
@@ -154,7 +222,8 @@ button {
 .come-back,
 .monthly,
 .future-hero,
-.future-me {
+.future-me,
+.sunshine-note {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--paper);
@@ -337,10 +406,81 @@ textarea:focus {
 .truth-card h3,
 .vision-block h3,
 .monthly h3,
-.future-me h3 {
+.future-me h3,
+.sunshine-note h3 {
   margin: 0 0 10px;
   font-size: 1rem;
   letter-spacing: 0;
+}
+
+.sunshine-note {
+  background:
+    linear-gradient(135deg, rgba(242, 173, 62, 0.12), rgba(113, 132, 106, 0.09)),
+    var(--paper);
+}
+
+.sunshine-note p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.48;
+}
+
+.summary-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.summary-card-head h3 {
+  margin: 0;
+}
+
+.summary-card-head span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff8ea;
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 760;
+}
+
+.summary-moments {
+  display: grid;
+  gap: 10px;
+}
+
+.summary-moments div {
+  border-top: 1px solid rgba(230, 217, 198, 0.76);
+  padding-top: 10px;
+}
+
+.summary-moments div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.summary-moments strong,
+.summary-moments small {
+  display: block;
+  line-height: 1.42;
+}
+
+.summary-moments strong {
+  color: var(--foreground);
+  font-size: 0.92rem;
+  font-weight: 680;
+}
+
+.summary-moments small {
+  margin-top: 5px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
 }
 
 ul {
@@ -462,6 +602,35 @@ li {
 
   .topbar h1 {
     font-size: 1.2rem;
+  }
+
+  .brand-logo {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .brand-sun {
+    left: 13px;
+    top: 8px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .brand-horizon {
+    left: 8px;
+    right: 8px;
+    bottom: 14px;
+  }
+
+  .brand-path {
+    left: 18px;
+    right: 18px;
+  }
+
+  .signal-orbit {
+    display: none;
   }
 
   .tabs button {
