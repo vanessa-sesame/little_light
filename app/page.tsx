@@ -264,6 +264,11 @@ export default function Home() {
 
   return (
     <main className="app-shell">
+      <div className="light-field" aria-hidden="true">
+        <span className="light-ribbon ribbon-one" />
+        <span className="light-ribbon ribbon-two" />
+        <span className="light-ribbon ribbon-three" />
+      </div>
       <section className="phone-frame" aria-label="Little Light app">
         <header className="topbar">
           <div className="brand-lockup">
@@ -276,11 +281,6 @@ export default function Home() {
               <p className="eyebrow">Little Light</p>
               <h1>Don't let one difficult part become the whole life.</h1>
             </div>
-          </div>
-          <div className="signal-orbit" aria-hidden="true">
-            <span />
-            <span />
-            <span />
           </div>
         </header>
 
