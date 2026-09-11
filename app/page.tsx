@@ -223,6 +223,218 @@ function rescueReflection(type: string, text: string) {
   return `${opener} It is real, and it is not the whole map. Come back to one thing that still belongs to you.`;
 }
 
+function rescuePerspective(type: string) {
+  const perspectives: Record<
+    string,
+    {
+      outsideTitle: string;
+      outsideItems: string[];
+      mineTitle: string;
+      mineItems: string[];
+      truthTitle: string;
+      truthLines: string[];
+    }
+  > = {
+    "His situation": {
+      outsideTitle: "What belongs to him",
+      outsideItems: [
+        "his applications",
+        "his decisions",
+        "his networking",
+        "his project",
+        "his career outcome",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "loving him",
+        "listening",
+        "choosing today's emotional energy",
+        "protecting my own life and mood",
+      ],
+      truthTitle: "His situation is unresolved.",
+      truthLines: [
+        "Unresolved does not mean hopeless or static.",
+        "His bad week does not automatically become your bad week.",
+      ],
+    },
+    Work: {
+      outsideTitle: "What belongs to work",
+      outsideItems: [
+        "deadlines",
+        "other people's reactions",
+        "unclear priorities",
+        "office politics",
+        "systems I cannot redesign today",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "one next action",
+        "asking for clarity",
+        "protecting my attention",
+        "remembering my longer career",
+      ],
+      truthTitle: "Work is loud today.",
+      truthLines: [
+        "It can matter without becoming your full identity.",
+        "One difficult workday is not a final verdict on your capability.",
+      ],
+    },
+    Parenting: {
+      outsideTitle: "What belongs to the moment",
+      outsideItems: [
+        "a child's mood",
+        "noise and logistics",
+        "imperfect timing",
+        "everyone's tiredness",
+        "the fact that parenting is repetitive",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "repairing when needed",
+        "keeping one boundary",
+        "taking a breath before responding",
+        "not measuring love by one hard hour",
+      ],
+      truthTitle: "This is a hard parenting moment.",
+      truthLines: [
+        "Hard moments can happen inside a loving family.",
+        "You are allowed to be stretched and still be a good mother.",
+      ],
+    },
+    Relationship: {
+      outsideTitle: "What belongs to the relationship",
+      outsideItems: [
+        "the conversation",
+        "both people's histories",
+        "timing",
+        "repair",
+        "what each person is able to give",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "speaking clearly",
+        "not mind-reading",
+        "asking for what matters",
+        "keeping my own center",
+      ],
+      truthTitle: "A relationship feeling is not the whole relationship.",
+      truthLines: [
+        "This moment can be painful without defining everything.",
+        "Clarity is kinder than spiraling alone.",
+      ],
+    },
+    Lonely: {
+      outsideTitle: "What belongs to the feeling",
+      outsideItems: [
+        "the quiet of this hour",
+        "who is unavailable right now",
+        "old memories being activated",
+        "the body's need for contact",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "sending one message",
+        "going somewhere with people nearby",
+        "making the evening gentler",
+        "not turning loneliness into identity",
+      ],
+      truthTitle: "Loneliness is a signal.",
+      truthLines: [
+        "It is not proof that you are unloved.",
+        "One thread of contact still counts.",
+      ],
+    },
+    Confidence: {
+      outsideTitle: "What belongs to doubt",
+      outsideItems: [
+        "comparison",
+        "newness",
+        "not knowing yet",
+        "other people's pace",
+        "the mind asking for certainty",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "one piece of practice",
+        "one visible attempt",
+        "one skill I am building",
+        "using evidence before mood",
+      ],
+      truthTitle: "Confidence is not required first.",
+      truthLines: [
+        "You can act before you fully believe.",
+        "Evidence often arrives before confidence does.",
+      ],
+    },
+    Overwhelmed: {
+      outsideTitle: "What belongs to the pile",
+      outsideItems: [
+        "too many open loops",
+        "competing needs",
+        "unclear order",
+        "mental tabs",
+        "the wish to fix everything",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "choosing the next handle",
+        "lowering the standard for today",
+        "closing one loop",
+        "pausing before adding more",
+      ],
+      truthTitle: "The pile is not the plan.",
+      truthLines: [
+        "You only need the next handle, not the whole staircase.",
+        "A smaller day can still be a successful day.",
+      ],
+    },
+    "Just flat": {
+      outsideTitle: "What belongs to flatness",
+      outsideItems: [
+        "low energy",
+        "a muted mood",
+        "the body asking for softness",
+        "a day without sparkle",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "doing less without shame",
+        "one sensory comfort",
+        "one tiny useful action",
+        "letting the day be plain",
+      ],
+      truthTitle: "Flat is not failed.",
+      truthLines: [
+        "A low-glow day is still a day in your life.",
+        "You do not have to manufacture brightness.",
+      ],
+    },
+    "I don't know": {
+      outsideTitle: "What belongs to the fog",
+      outsideItems: [
+        "mixed feelings",
+        "not having the right words yet",
+        "body tiredness",
+        "too many possible causes",
+      ],
+      mineTitle: "What belongs to me",
+      mineItems: [
+        "naming one sensation",
+        "choosing one gentle next step",
+        "not forcing a perfect explanation",
+        "coming back later",
+      ],
+      truthTitle: "Not knowing is still information.",
+      truthLines: [
+        "You can respond gently before you fully understand.",
+        "Fog does not mean your whole life has disappeared.",
+      ],
+    },
+  };
+
+  return perspectives[type] ?? perspectives["I don't know"];
+}
+
 export default function Home() {
   const [tab, setTab] = useState<Tab>("today");
   const [moments, setMoments] = useState<Moment[]>(seedMoments);
@@ -259,6 +471,7 @@ export default function Home() {
   const myEvidence = moments.find((moment) => moment.person === "me") ?? moments[0];
   const futureSignals = moments.filter((moment) => moment.futureSignal);
   const latestMoment = moments[0];
+  const currentRescuePerspective = rescuePerspective(rescueType);
   const strongestFutureArea =
     (["career", "lifestyle", "identity", "location", "family"] as FutureArea[])
       .sort((first, second) => areaCount(futureSignals, second) - areaCount(futureSignals, first))[0] ??
@@ -445,46 +658,23 @@ export default function Home() {
               <p>{rescueReflection(rescueType, rescueText)}</p>
             </article>
 
-            {rescueType === "His situation" ? (
-              <div className="rescue-stack">
-                <PerspectiveColumn
-                  title="What is his"
-                  items={[
-                    "his job search",
-                    "his applications",
-                    "his decisions",
-                    "his networking",
-                    "his project",
-                    "his career outcome",
-                  ]}
-                />
-                <PerspectiveColumn
-                  title="What is mine"
-                  items={[
-                    "loving him",
-                    "listening",
-                    "supporting him",
-                    "choosing how much emotional energy I can give today",
-                    "protecting my own life and mood",
-                  ]}
-                />
-                <article className="truth-card">
-                  <p className="section-kicker">What is true right now</p>
-                  <h3>His situation is unresolved.</h3>
-                  <p>But unresolved does not mean hopeless or static.</p>
-                  <p>His bad week does not automatically become your bad week.</p>
-                </article>
-              </div>
-            ) : (
+            <div className="rescue-stack">
+              <PerspectiveColumn
+                title={currentRescuePerspective.outsideTitle}
+                items={currentRescuePerspective.outsideItems}
+              />
+              <PerspectiveColumn
+                title={currentRescuePerspective.mineTitle}
+                items={currentRescuePerspective.mineItems}
+              />
               <article className="truth-card">
                 <p className="section-kicker">What is true right now</p>
-                <h3>Today feels heavy.</h3>
-                <p>
-                  That does not make the rest of your life disappear. Start with one
-                  small piece that is still yours.
-                </p>
+                <h3>{currentRescuePerspective.truthTitle}</h3>
+                {currentRescuePerspective.truthLines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
               </article>
-            )}
+            </div>
 
             <section className="come-back">
               <p className="section-kicker">Now come back to you</p>
