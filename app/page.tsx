@@ -445,6 +445,7 @@ export default function Home() {
   const [rescueType, setRescueType] = useState("His situation");
   const [rescueMode, setRescueMode] = useState("Comfort me");
   const [rescueText, setRescueText] = useState("");
+  const [rescueNotice, setRescueNotice] = useState("");
   const [savedNotice, setSavedNotice] = useState("");
 
   useEffect(() => {
@@ -499,6 +500,27 @@ export default function Home() {
     setMoments((current) => [next, ...current]);
     setText("");
     setSavedNotice(futureSignal ? interpretMoment(next) : "Saved as real evidence.");
+  }
+
+  function saveRescueNote() {
+    if (!rescueText.trim()) {
+      setRescueNotice("Write one line first. It does not have to be polished.");
+      return;
+    }
+
+    const next: Moment = {
+      id: crypto.randomUUID(),
+      text: `${rescueType}: ${rescueText.trim()}`,
+      createdAt: new Date().toISOString(),
+      category: rescueType === "Work" ? "work" : rescueType === "Parenting" ? "family" : "other",
+      person: "me",
+      source: "user",
+      futureSignal: false,
+    };
+
+    setMoments((current) => [next, ...current]);
+    setRescueText("");
+    setRescueNotice("Saved. This moment is now part of your evidence, not just a feeling passing through.");
   }
 
   return (
@@ -650,6 +672,10 @@ export default function Home() {
                   value={rescueText}
                 />
               </label>
+              <button className="primary rescue-save" onClick={saveRescueNote} type="button">
+                Save rescue note
+              </button>
+              {rescueNotice && <p className="notice">{rescueNotice}</p>}
             </div>
 
             <article className="rescue-reflection">

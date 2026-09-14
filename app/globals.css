@@ -364,6 +364,11 @@ textarea:focus {
   min-height: 94px;
 }
 
+.rescue-save {
+  margin-top: 12px;
+  width: 100%;
+}
+
 .chip-grid {
   display: flex;
   flex-wrap: wrap;
